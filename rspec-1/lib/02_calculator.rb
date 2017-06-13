@@ -10,13 +10,23 @@ def sum(arr)
   arr.reduce(0, :+)
 end
 
-def multiply(n1, n2)
+def multiply(arr)
+  arr.reduce(:*)
 end
 
 def power(n1, power)
-  n1 ** power
+  n1**power
 end
 
-def factorial
+def factorial(num)
+  if num == 0 || num == 1
+    return 1
+  end
 
+  products = []
+  (1..num).each do |n|
+    products << n
+  end
+
+  products.reduce(:*)
 end

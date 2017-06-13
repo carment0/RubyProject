@@ -71,4 +71,9 @@ describe "#translate" do
   # Test-driving bonus:
   # * write a test asserting that capitalized words are still capitalized (but with a different initial capital letter, of course)
   # * retain the punctuation from the original phrase
+  it "keeps the capitalization of the word in the latinize word and retain punctuation" do
+    s = translate("Don't do it Jon")
+    expect(s).to eq("On'tday oday itay Onjay")
+  end
+
 end
