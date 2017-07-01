@@ -14,12 +14,14 @@ class Code
   def self.parse(code_string)
     code = code_string.upcase
     pegs = []
+
     code.each_char do |ch|
       if !PEGS.keys.include?(ch)
-        raise ArgumentError.new("Please pick valid peg colors")
+        raise "Please pick valid peg colors"
       end
       pegs << PEGS[ch]
     end
+
     self.new(pegs)
   end
 
@@ -71,10 +73,15 @@ class Game
   end
 
   def play
-    3.times do |turn|
+    turn = 10
+    while turn > 0
       get_guess
+      unless @user_guess.nil?
+        puts "(You have #{turn-1} more turns left)"
+        display_matches(@user_guess)
+        turn -= 1
+      end
       break if won?
-      display_matches(@user_guess)
     end
     win?
   end
@@ -84,21 +91,28 @@ class Game
   end
 
   def get_guess
-    puts "Guess the secret color code! Select four colors: B, G, O, P, R, or Y"
-    puts "Same color can be used more than once."
-    puts "You have 10 chances to guess the code correctly."
+    puts "\nGuess the secret color code!"
+    puts "\t Select four colors: B, G, O, P, R, or Y"
+    puts "\t Same color can be used more than once."
+    puts "\t You have 10 chances to guess the code correctly."
     guess_code = $stdin.gets.chomp
-    @user_guess = Code.parse(guess_code)
+    begin
+      @user_guess = Code.parse(guess_code)
+    rescue RuntimeError
+      puts "Color does not exist, please try again"
+      @user_guess = nil
+    end
   end
 
   def display_matches(code)
-    puts "exact matches: #{@secret_code.exact_matches(code)}"
-    puts "near matches: #{@secret_code.near_matches(code)}"
+    puts "\n>> exact matches: #{@secret_code.exact_matches(code)}"
+    puts ">> near matches: #{@secret_code.near_matches(code)}"
+    puts "_______________________________________________________"
   end
 
   def win?
     if @secret_code == @user_guess
-      puts "You Win!"
+      puts "You Wonnnn! The answer was #{@secret_code}"
     else
       puts "You Lost! The answer was #{@secret_code}"
     end
